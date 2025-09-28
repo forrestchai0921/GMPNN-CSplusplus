@@ -1,42 +1,28 @@
-# GMPNN-CS
-Source code for ["Drug-drug Interaction Prediction with Learnable Size-Adaptive Molecular Substructures"](https://doi.org/10.1093/bib/bbab441) 
-   
-![Overview GMPNN-CS framework](Framework.png)  
+# GMPNN-CSplusplus
+This research led to my selection as a Regeneron Science Talent Search Scholar. The model is named GMPNN-CS++. It is built onto GMPNN-CS (Nyamabo et al., 2022)'s framework, with a novel dual-contrasting framework and the self-attention and residual memory network modules introduced to enhance model performance. 
 
- ## Required packages
-* Python == 3.7
-* [PyTorch](https://pytorch.org/) == 1.6
-* [PyTorch Geometry](https://pytorch-geometric.readthedocs.io/) == 1.6
-* [rdkit](https://www.rdkit.org/) == 2020.09.1 (for data preprocessing)
+**For GMPNN-CS++ implementation, see final DDI codes.**
+**For GMPNN-CS++ paper,**   [Download Paper (PDF)](./GMPNN-CS++.pdf)
 
-## Dataset
-### Download
-Datasets can be downloaded using the python library [Therapeutics Data Commons](https://tdcommons.ai/).
+**Repository Structure & Attribution**
+All files in this repository, except for the folder final DDI codes and the file /GMPNN-CS++.pdf, originate from kanz76/GMPNN-CS
+.
+They are the original source code of GMPNN-CS. Full credit for these files goes to the original authors.
 
-### Data Preprocessing
-Molecular graph representation and negative samples generation. All saved in [data/preprocessed](data/preprocessed).   
+final DDI codes/
+This folder contains the complete implementation of GMPNN-CS++, which is based on the original GMPNN-CS.
+My modifications include:
 
-    python data_preprocessing.py -d {drugbank,twosides} [-n NEG_ENT] [-s SEED] -o {all,generate_triplets,drug_data,split} [-t_r TEST_RATIO] [-n_f N_FOLDS]
+ddi_datasets.py – modified to construct the dataset with the novel interaction-mislabeled DDI type.
 
-Arguments:
+custom_loss.py – replaced the original loss function with my proposed dual-contrasting loss function.
 
-    -d  Dataset to be preprocessed. Choose from {drugbank, twosides}.
-    -n Number of negative samples per positive sample. Default=1
-    -s Seed for the random number generator. Default=0
-    -o Preprocessing operation to perform. Choose from {all, generate_triplets, drug_data, split}.
-        1. generate_triplets: generates triplets + negative samples.
-        2. drug_data: transform drugs to graphs.
-        3. split: stratified splitting of the dataset in -n_f number of folds.
-        4. all: does all the above at once.
-    -t_r test set ratio [0-1]. Default=0.2
-    -n_f number of folds. Default=3
-## Training 
-    python train_on_fold.py -d {drugbank, twosides} -fold FOLD -n_iter N_ITER [-drop DROPOUT] [-b BATCH_SIZE]
+models.py – extended by adding self-attention and residual memory network modules.
 
-Arguments:
+selfattention.py - newly added to incorporate the self-attention module to the model
 
-    -d  Dataset to be trained on. Choose from {drugbank, twosides}.
-    -fold fold of the dataset to be trained on.
-    -n_iter Number of iterations for message passing.
-    -drop dropout probability in [0-1]. Default=0.
-    -b Batch size of DDI triplets. Default=512.
+
+**Abstract:** Drug-drug interactions (DDIs) occur when multiple drugs react with each other when taken together. They can lead to unintended side effects that may be harmful to patients. Developing an efficient and accurate computational model for DDI predictions is highly important to assist healthcare professionals in making better prescription decisions. 
+
+The proposed GMPNN-CS++ model in this paper employs the Self-attention mechanism and a residual memory network after GMPNN-CS’s message-passing module to enhance the extracted representation of cross-substructure pairs within two interacting drug molecules. Previous neural network models for DDI prediction mainly consider two types of samples: positive samples and negative non-interaction samples. I introduce a novel dual-contrasting sampling approach in GMPNN-CS++ to include a third type, negative mislabeled-interaction samples, representing an overlooked common negative scenario. A dual-contrasting loss function is designed to make the neural network distinguish between positive samples and both types of negative samples, thereby widening the model’s applicability. Through dual-contrasting, the proposed method GMPNN-CS++ demonstrates an ability to capture additional features and improves performance in predicting both positive and negative DDI cases, achieving an overall accuracy of 97%, compared to the baseline GMPNN-CS.
+
